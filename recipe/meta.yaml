@@ -1,5 +1,5 @@
 {% set name = "helm-ls" %}
-{% set version = "0.0.22" %}
+{% set version = "0.1.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,11 +7,11 @@ package:
 
 source:
   url: https://github.com/mrjosh/helm-ls/archive/v{{ version }}.tar.gz
-  sha256: 8602139460f387eb2b423d15f1ade0eba67835dec6cdb73c9d9a13964e44a671
+  sha256: 6cbbe74114e6a4b8cd0821e372190f67743bb0528ea364a969524c754ba00c22
 
 build:
   number: 0
-  skip: True  # [win]
+  skip: true  # [win]
 
 requirements:
   build:
