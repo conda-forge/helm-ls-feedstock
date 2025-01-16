@@ -1,5 +1,5 @@
 context:
-  version: 0.1.0
+  version: "0.1.1"
 
 package:
   name: helm-ls
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/mrjosh/helm-ls/archive/v${{ version }}.tar.gz
-  sha256: 6cbbe74114e6a4b8cd0821e372190f67743bb0528ea364a969524c754ba00c22
+  sha256: f0db0f52c40d18dc18151f8df98c26afb7c1081b5fcf8d8e20c9094e1d3eb369
 
 build:
   number: 0
