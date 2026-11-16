@@ -1,5 +1,5 @@
 context:
-  version: "0.5.0"
+  version: "0.5.4"
 
 package:
   name: helm-ls
@@ -7,28 +7,45 @@ package:
 
 source:
   url: https://github.com/mrjosh/helm-ls/archive/v${{ version }}.tar.gz
-  sha256: 75da2b8c3397de3361c5e93d256b0d6d1666a83b4039ed5febf3df6ea9f73bc1
+  sha256: a8a5490084839af3506c85efcf603fbd71bb9ee37222bbd7817da1da3f054ab3
+  target_directory: src
 
 build:
   number: 0
-  skip: win
+  script:
+    - cd src
+    - go-licenses save . --save_path ../library_licenses
+    - if: unix
+      then: go build -v -trimpath -o $PREFIX/bin/helm-ls -ldflags="-s -w -X main.Version=v${{ version }} -X main.Branch=v${{ version }}"
+      else: go build -v -trimpath -o %LIBRARY_BIN%\helm-ls.exe -ldflags="-s -w -X main.Version=v${{ version }} -X main.Branch=v${{ version }}"
 
 requirements:
   build:
-    - ${{ compiler('c') }}
-    - ${{ stdlib('c') }}
-    - ${{ compiler('go-cgo') }}
+    - if: unix
+      then:
+        - ${{ compiler("c") }}
+        - ${{ stdlib("c") }}
+      else:
+        # cgo on Windows requires a MinGW toolchain, MSVC is not supported
+        - ${{ compiler("m2w64_c") }}
+        - ${{ stdlib("m2w64_c") }}
+    - ${{ compiler("go-cgo") }}
     - go-licenses
 
 tests:
   - script:
       - helm-ls --help
+      - helm-ls version
+  - package_contents:
+      bin:
+        - helm-ls
+      strict: true
 
 about:
   license: MIT
   license_file:
-    - LICENSE
-    - license-files/
+    - src/LICENSE
+    - library_licenses/
   summary: Language server for Helm
   homepage: https://github.com/mrjosh/helm-ls
   repository: https://github.com/mrjosh/helm-ls
@@ -36,3 +53,4 @@ about:
 extra:
   recipe-maintainers:
     - danielnachun
+    - pavelzw
