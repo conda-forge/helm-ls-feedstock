@@ -1,2 +1,5 @@
 c_stdlib_version:  # [osx]
   - "13.0"         # [osx]
+# go on osx-arm64 still constrains clang_osx-arm64 21.*
+c_compiler_version:  # [osx]
+  - "21"             # [osx]

@@ -11,13 +11,13 @@ source:
   target_directory: src
 
 build:
-  number: 0
+  number: 1
   script:
     - cd src
     - go-licenses save . --save_path ../library_licenses
     - if: unix
-      then: go build -v -trimpath -o $PREFIX/bin/helm-ls -ldflags="-s -w -X main.Version=v${{ version }} -X main.Branch=v${{ version }}"
-      else: go build -v -trimpath -o %LIBRARY_BIN%\helm-ls.exe -ldflags="-s -w -X main.Version=v${{ version }} -X main.Branch=v${{ version }}"
+      then: go build -v -trimpath -o $PREFIX/bin/helm_ls -ldflags="-s -w -X main.Version=v${{ version }} -X main.Branch=v${{ version }}"
+      else: go build -v -trimpath -o %LIBRARY_BIN%\helm_ls.exe -ldflags="-s -w -X main.Version=v${{ version }} -X main.Branch=v${{ version }}"
 
 requirements:
   build:
@@ -34,11 +34,11 @@ requirements:
 
 tests:
   - script:
-      - helm-ls --help
-      - helm-ls version
+      - helm_ls --help
+      - helm_ls version
   - package_contents:
       bin:
-        - helm-ls
+        - helm_ls
       strict: true
 
 about:
