@@ -11,9 +11,12 @@ source:
   target_directory: src
 
 build:
-  number: 1
+  number: 2
   script:
     - cd src
+    # no MinGW gcc targets win-arm64; zig ships aarch64 mingw-w64 headers and CRT
+    - if: target_platform == "win-arm64"
+      then: set "CC=zig cc -target aarch64-windows-gnu"
     - go-licenses save . --save_path ../library_licenses
     - if: unix
       then: go build -v -trimpath -o $PREFIX/bin/helm_ls -ldflags="-s -w -X main.Version=v${{ version }} -X main.Branch=v${{ version }}"
@@ -25,10 +28,14 @@ requirements:
       then:
         - ${{ compiler("c") }}
         - ${{ stdlib("c") }}
-      else:
-        # cgo on Windows requires a MinGW toolchain, MSVC is not supported
+    # cgo on Windows requires a MinGW toolchain, MSVC is not supported
+    - if: target_platform == "win-64"
+      then:
         - ${{ compiler("m2w64_c") }}
         - ${{ stdlib("m2w64_c") }}
+    - if: target_platform == "win-arm64"
+      then:
+        - zig
     - ${{ compiler("go-cgo") }}
     - go-licenses
 
